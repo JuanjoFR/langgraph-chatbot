@@ -1,7 +1,7 @@
 'use client';
 
 import { v4 as uuidv4 } from 'uuid';
-import { sayUserNameInvocation, askUserNameInvocation } from '@/lib/actions';
+import { invoke } from '@/lib/actions';
 import {
   Select,
   SelectContent,
@@ -43,10 +43,6 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-const simulateResponse = (message: string) => {
-  return `Response to: "${message}"`;
-};
-
 export default function Home() {
   const [chatMessages, setChatMessages] = React.useState<ChatMessage[]>([]);
   const [isTyping, setIsTyping] = React.useState(false);
@@ -57,24 +53,6 @@ export default function Home() {
       user: 'User 1'
     }
   });
-
-  const handleFirstClick = async () => {
-    const result = await sayUserNameInvocation({
-      ...user1Config,
-      userName: 'User1'
-    });
-    console.log(result);
-  };
-
-  const handleSecondClick = async () => {
-    const result = await askUserNameInvocation(user1Config);
-    console.log(result);
-  };
-
-  const handleThirdClick = async () => {
-    const result = await askUserNameInvocation(user2Config);
-    console.log(result);
-  };
 
   function clearMessages() {
     setChatMessages([]);
@@ -103,8 +81,12 @@ export default function Home() {
     setIsTyping(true);
     // Simulate network delay
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    const response = simulateResponse(userMessage);
-    addMessage(response, 'assistant');
+
+    const selectedUser = form.getValues('user');
+    const userConfig = selectedUser === 'User 1' ? user1Config : user2Config;
+    const response = await invoke(userConfig, userMessage);
+
+    addMessage(response.message as string, 'assistant');
     setIsTyping(false);
   }
 
@@ -122,26 +104,6 @@ export default function Home() {
   }
 
   return (
-    // <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-gray-100 to-gray-300 p-6 space-x-4">
-    //   <button
-    //     onClick={handleFirstClick}
-    //     className="px-6 py-3 bg-blue-500 text-white rounded shadow-lg hover:bg-blue-600 transition duration-300"
-    //   >
-    //     Set User 1 Name
-    //   </button>
-    //   <button
-    //     onClick={handleSecondClick}
-    //     className="px-6 py-3 bg-blue-500 text-white rounded shadow-lg hover:bg-blue-600 transition duration-300"
-    //   >
-    //     Get User 1 Name
-    //   </button>
-    //   <button
-    //     onClick={handleThirdClick}
-    //     className="px-6 py-3 bg-green-500 text-white rounded shadow-lg hover:bg-green-600 transition duration-300"
-    //   >
-    //     Get User 2 Name
-    //   </button>
-    // </div>
     <div className="flex flex-col h-screen max-w-2xl mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">LangChain Chatbot</h1>
 
