@@ -6,6 +6,8 @@ This project uses Next.js with shadcn/ui for creating a chatbot application with
 
 Watch the video below to see an example usage of the app:
 
+[langchain-chatbot.webm](https://github.com/user-attachments/assets/16184b6f-162e-4ecd-a0b4-0dc0fbb8027e)
+
 ## Technologies Used
 
 This project leverages the following technologies:
