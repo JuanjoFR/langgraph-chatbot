@@ -2,6 +2,15 @@
   "name": "langgraph-chatbot",
   "version": "0.1.0",
   "private": true,
+  "description": "A chatbot application built with Next.js, React, and Langchain.",
+  "keywords": [
+    "chatbot",
+    "Next.js",
+    "React",
+    "Langchain",
+    "chat-gpt",
+    "openai"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",
